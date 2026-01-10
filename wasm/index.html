@@ -19,6 +19,17 @@
 <body>
 <canvas id="canvas" width="640" height="480"></canvas>
 <!--<script type="module;application/wasm" src="./pkg/wasm.js"></script>-->
-<script type="module" src="./index.js"></script>
+<script type="module">
+    import init, {mainJs} from "./pkg/wasm.js";
+
+    async function run() {
+        await init();
+    }
+
+    run().then(() => {
+        // mainJs();
+        console.log("WASM Loaded");
+    });
+</script>
 </body>
 </html>

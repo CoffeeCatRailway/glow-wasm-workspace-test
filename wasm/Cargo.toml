@@ -8,10 +8,15 @@ crate-type = ["cdylib"]
 
 [dependencies]
 core = { path = "../core" }
-glow = { workspace = true }
+glow.workspace = true
 glam.workspace = true
+winit.workspace = true
 console_error_panic_hook = "0.1.7"
 console_log = "1.0.0"
+log = "0.4.29"
 wasm-bindgen = "0.2.106"
 web-sys = { version = "0.3.83", features = ["HtmlCanvasElement", "WebGl2RenderingContext", "Window", "Document"] }
-winit = "0.30.12"
+
+[package.metadata.wasm-pack.profile.release]
+wasm-opt = false
+
