@@ -624,7 +624,6 @@ name = "native"
 version = "0.1.0"
 dependencies = [
  "core",
- "glam",
  "glow",
  "glutin",
  "glutin-winit",
@@ -1381,7 +1380,6 @@ dependencies = [
  "console_error_panic_hook",
  "console_log",
  "core",
- "glam",
  "glow",
  "log",
  "wasm-bindgen",

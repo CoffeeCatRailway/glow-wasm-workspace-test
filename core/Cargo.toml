@@ -1,7 +1,10 @@
 [package]
 name = "core"
+description = "Core app functionality and rendering code"
 version = "0.1.0"
 edition.workspace = true
+license.workspace = true
+repository.workspace = true
 
 [lib]
 crate-type = ["rlib"]

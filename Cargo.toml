@@ -4,8 +4,14 @@ members = ["core", "native", "wasm"]
 resolver = "3"
 
 [workspace.package]
+description = "Web/Native app template"
 version = "0.1.0"
 edition = "2024"
+readme = "README.md"
+license = "CC0-1"
+license-file = "LICENSE"
+repository = "https://github.com/CoffeeCatRailway/glow-wasm-workspace-test"
+homepage = "https://github.com/CoffeeCatRailway/glow-wasm-workspace-test"
 
 [workspace.dependencies]
 glow = { version = "0.16.0", default-features = false }
