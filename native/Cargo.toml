@@ -11,6 +11,7 @@ core = { path = "../core" }
 glow.workspace = true
 #glam.workspace = true
 winit = { workspace = true, features = ["rwh_06"]}
+winit_input_helper.workspace = true
 glutin = "0.32.3"
 glutin-winit = "0.5.0"
 raw-window-handle = "0.6.2"

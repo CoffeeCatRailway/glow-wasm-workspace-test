@@ -10,9 +10,10 @@ use glow::HasContext;
 use wasm_bindgen::prelude::*;
 use web_sys::{console, WebGl2RenderingContext};
 use winit::application::ApplicationHandler;
-use winit::event::WindowEvent;
+use winit::event::{DeviceEvent, DeviceId, StartCause, WindowEvent};
 use winit::event_loop::{ActiveEventLoop, ControlFlow, EventLoop};
 use winit::window::{Window, WindowAttributes, WindowId};
+use winit_input_helper::WinitInputHelper;
 
 use winit::platform::web::WindowAttributesExtWebSys;
 
@@ -24,9 +25,14 @@ struct State {
 struct App {
 	window: Option<Window>,
 	state: Option<State>,
+	input: WinitInputHelper,
 }
 
 impl ApplicationHandler for App {
+	fn new_events(&mut self, _eventLoop: &ActiveEventLoop, _cause: StartCause) {
+		self.input.step();
+	}
+	
 	fn resumed(&mut self, eventLoop: &ActiveEventLoop) {
 		eventLoop.set_control_flow(ControlFlow::Poll);
 		// self.window = Some(web_sys::window().unwrap());
@@ -57,7 +63,7 @@ impl ApplicationHandler for App {
 			.with_canvas(Some(canvas));
 		let window = eventLoop.create_window(attributes).unwrap();
 		
-		let testApp = TestApp::new(gl.clone());
+		let testApp = TestApp::new(gl.clone(), (800, 600));
 
 		self.window = Some(window);
 		self.state = Some(State {
@@ -68,6 +74,7 @@ impl ApplicationHandler for App {
 	}
 
 	fn window_event(&mut self, eventLoop: &ActiveEventLoop, _id: WindowId, event: WindowEvent) {
+		self.input.process_window_event(&event);
 		match event {
 			// WindowEvent::ActivationTokenDone { .. } => {},
 			// WindowEvent::Resized(size) => unsafe {
@@ -113,10 +120,15 @@ impl ApplicationHandler for App {
 			_ => (),
 		}
 	}
-
+	
+	fn device_event(&mut self, _eventLoop: &ActiveEventLoop, _id: DeviceId, event: DeviceEvent) {
+		self.input.process_device_event(&event);
+	}
+	
 	fn about_to_wait(&mut self, _eventLoop: &ActiveEventLoop) {
+		self.input.end_step();
 		if let Some(ref mut state) = self.state {
-			state.testApp.update();
+			state.testApp.update(self.input.delta_time().unwrap().as_secs_f64(), &self.input);
 		}
 	}
 
@@ -135,7 +147,11 @@ pub fn mainJs() -> Result<(), JsValue> {
 	console::log_1(&JsValue::from_str("Hello from Rust!"));
 	
 	let eventLoop = EventLoop::new().unwrap();
-	eventLoop.run_app(&mut App::default()).expect("Failed to run event loop");
+	eventLoop.run_app(&mut App {
+		window: None,
+		state: None,
+		input: WinitInputHelper::new(),
+	}).expect("Failed to run event loop");
 	
 	// let document = web_sys::window().unwrap().document().unwrap();
 	// let canvas = document.get_element_by_id("canvas").unwrap();

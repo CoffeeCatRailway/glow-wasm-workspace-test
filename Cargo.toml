@@ -17,3 +17,4 @@ homepage = "https://github.com/CoffeeCatRailway/glow-wasm-workspace-test"
 glow = { version = "0.16.0", default-features = false }
 glam = "0.30.9"
 winit = "0.30.12"
+winit_input_helper = "0.17.0"
