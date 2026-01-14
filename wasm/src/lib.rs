@@ -7,8 +7,9 @@
 use core::TestApp;
 use std::rc::Rc;
 use glow::HasContext;
+use log::{debug, error, info, trace, warn};
 use wasm_bindgen::prelude::*;
-use web_sys::{console, WebGl2RenderingContext};
+use web_sys::WebGl2RenderingContext;
 use winit::application::ApplicationHandler;
 use winit::event::{DeviceEvent, DeviceId, StartCause, WindowEvent};
 use winit::event_loop::{ActiveEventLoop, ControlFlow, EventLoop};
@@ -84,7 +85,7 @@ impl ApplicationHandler for App {
 			// },
 			// WindowEvent::Moved(_) => {},
 			WindowEvent::CloseRequested => {
-				println!("The close button was pressed; stopping");
+				info!("The close button was pressed; stopping");
 				eventLoop.exit();
 			},
 			// WindowEvent::Destroyed => {},
@@ -144,7 +145,13 @@ pub fn mainJs() -> Result<(), JsValue> {
 	console_error_panic_hook::set_once();
 	console_log::init_with_level(log::Level::Info).unwrap_throw();
 	
-	console::log_1(&JsValue::from_str("Hello from Rust!"));
+	info!("Hello, world!");
+	
+	error!("This is an error");
+	warn!("This is a warning");
+	info!("This is info");
+	debug!("This is a debug message");
+	trace!("This is a trace message");
 	
 	let eventLoop = EventLoop::new().unwrap();
 	eventLoop.run_app(&mut App {

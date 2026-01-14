@@ -14,4 +14,5 @@ glow.workspace = true
 glam.workspace = true
 winit.workspace = true
 winit_input_helper.workspace = true
+log.workspace = true
 bytemuck = "1.24.0"

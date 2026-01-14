@@ -3,6 +3,7 @@
 use std::rc::Rc;
 use glam::{Mat4, Vec3};
 use glow::{Buffer, HasContext, VertexArray, ARRAY_BUFFER, DYNAMIC_DRAW, FLOAT, LINES};
+use log::info;
 use crate::render::Shader;
 
 pub struct LineRenderer {
@@ -149,7 +150,7 @@ impl LineRenderer {
             // }
 
             let drawCount = self.vec.len() / FLOATS;
-            // println!("drawCount: {}", drawCount);
+            // info!("drawCount: {}", drawCount);
             self.gl.draw_arrays(LINES, 0, drawCount as i32);
 			
 			self.gl.bind_buffer(ARRAY_BUFFER, None);
@@ -165,7 +166,7 @@ impl LineRenderer {
         if self.destroyed {
             return;
         }
-        println!("Destroying line renderer");
+		info!("Destroying line renderer");
         self.shader.delete();
         unsafe {
             self.gl.delete_buffer(self.vbo);

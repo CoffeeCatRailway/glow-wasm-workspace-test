@@ -3,6 +3,7 @@
 use std::rc::Rc;
 use glam::{vec3, I16Vec2, Mat4, Vec3};
 use glow::*;
+use log::info;
 use winit::keyboard::KeyCode;
 use winit_input_helper::WinitInputHelper;
 use crate::camera::{Camera, Movement};
@@ -54,10 +55,10 @@ impl TestApp {
 	}
 	
 	pub fn update(&mut self, dt: f64, input: &WinitInputHelper) {
-		// println!("{}", dt);
+		// info!("{}", dt);
 		if input.key_pressed(KeyCode::Digit1) {
 			self.mouseCaptured = !self.mouseCaptured;
-			println!("mouseCaptured: {}", self.mouseCaptured);
+			info!("mouseCaptured: {}", self.mouseCaptured);
 		}
 		
 		if input.key_held(KeyCode::KeyW) {
@@ -80,7 +81,7 @@ impl TestApp {
 		}
 		
 		if self.mouseCaptured {
-			// println!("{}", input.cursor_diff().1);
+			// info!("{}", input.cursor_diff().1);
 			self.camera.processMouseScroll(input.scroll_diff().1);
 			self.camera.processMouseMovement(input.cursor_diff().0, -input.cursor_diff().1, true);
 		}

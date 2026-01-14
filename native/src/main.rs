@@ -11,6 +11,7 @@ use glutin_winit::{DisplayBuilder, GlWindow};
 use raw_window_handle::{HasWindowHandle, RawWindowHandle};
 use std::num::NonZeroU32;
 use std::rc::Rc;
+use log::{debug, error, info, trace, warn};
 use winit::application::ApplicationHandler;
 use winit::dpi::LogicalSize;
 use winit::event::{DeviceEvent, DeviceId, StartCause, WindowEvent};
@@ -121,7 +122,7 @@ impl ApplicationHandler for App {
 			},
 			// WindowEvent::Moved(_) => {},
 			WindowEvent::CloseRequested => {
-				println!("The close button was pressed; stopping");
+				info!("The close button was pressed; stopping");
 				eventLoop.exit();
 			}
 			// WindowEvent::Destroyed => {},
@@ -178,7 +179,31 @@ impl ApplicationHandler for App {
 }
 
 fn main() {
-    println!("Hello, world!");
+	// let logFile = File::create("native.log").expect("Failed to create log file");
+	
+	// use env_logger::*;
+	// Builder::from_env(Env::default().default_filter_or("info")).target(Target::Pipe(Box::new(logFile))).init();
+	let _log2 = log2::open("logs/latest.log")
+		.size(100*1024*1024)
+		.rotate(10)
+		.tee(true)
+		.module(true)
+		.module_with_line(true)
+		.module_filter(|module| module.contains(""))
+		.compress(true)
+		.format(|record, _tee| format!("[{}] [{}] {}\n", chrono::Local::now(), record.level(), record.args()))
+		.level("info")
+		.start();
+	log_panics::init();
+	
+	info!("Hello, world!");
+	
+	error!("This is an error");
+	warn!("This is a warning");
+	info!("This is info");
+	debug!("This is a debug message");
+	trace!("This is a trace message");
+	// panic!("panic");
 
     let eventLoop = EventLoop::new().unwrap();
     eventLoop

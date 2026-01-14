@@ -12,6 +12,13 @@ glow.workspace = true
 #glam.workspace = true
 winit = { workspace = true, features = ["rwh_06"]}
 winit_input_helper.workspace = true
+log.workspace = true
+
+log2 = "0.2.2"
+chrono = "0.4.42"
+#env_logger = "0.11.8"
+log-panics = { version = "2.1.0", features = ["with-backtrace"] }
+
 glutin = "0.32.3"
 glutin-winit = "0.5.0"
 raw-window-handle = "0.6.2"
