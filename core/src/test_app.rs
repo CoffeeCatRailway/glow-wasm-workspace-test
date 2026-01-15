@@ -27,6 +27,9 @@ fn norm(v: Vec3) -> Vec3 {
 impl TestApp {
 	pub fn new(window: Rc<Window>, gl: Rc<Context>) -> Self {
 		unsafe {
+			// gl.viewport(0, 0, 800, 600);
+			gl.viewport(0, 0, window.inner_size().width as i32, window.inner_size().height as i32);
+
 			gl.enable(DEPTH_TEST);
 			gl.polygon_mode(FRONT_AND_BACK, FILL);
 		}
@@ -53,12 +56,13 @@ impl TestApp {
 	pub fn resize(&mut self, width: u32, height: u32) {
 		// Not needed on linux for some reason?
 		// Tested on: Arch Wayland
-		#[cfg(not(target_os = "linux"))]
+		// #[cfg(not(target_os = "linux"))]
 		unsafe {
-			// info!("{:?}", self.window.inner_size());
-			// info!("{} {}", width, height);
-			self.gl.viewport(0, 0, width as i32, height as i32);
-			// self.gl.viewport(0, 0, self.window.inner_size().width as i32, self.window.inner_size().height as i32);
+			info!("{} {}", width, height);
+			// self.gl.viewport(0, 0, width as i32, height as i32);
+			let size = self.window.inner_size();
+			info!("{} {}", size.width, size.height);
+			self.gl.viewport(0, 0, size.width as i32, size.height as i32);
 		}
 	}
 
