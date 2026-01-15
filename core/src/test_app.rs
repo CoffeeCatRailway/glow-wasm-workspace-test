@@ -54,11 +54,10 @@ impl TestApp {
 
 	#[allow(unused)]
 	pub fn resize(&mut self, width: u32, height: u32) {
-		// Not needed on linux for some reason?
-		// Tested on: Arch Wayland
-		// #[cfg(not(target_os = "linux"))]
+		// Stretches/Shrinks on Arch Linux Wayland, but works fine without it
+		#[cfg(not(target_os = "linux"))]
 		unsafe {
-			info!("{} {}", width, height);
+			// info!("{} {}", width, height);
 			// self.gl.viewport(0, 0, width as i32, height as i32);
 			let size = self.window.inner_size();
 			info!("{} {}", size.width, size.height);
