@@ -1,7 +1,6 @@
 #![allow(non_snake_case)]
 
 use core::TestApp;
-use glow::HasContext;
 use glutin::config::ConfigTemplateBuilder;
 use glutin::context::{ContextApi, ContextAttributesBuilder, PossiblyCurrentContext};
 use glutin::display::GetGlDisplay;
@@ -13,11 +12,14 @@ use std::num::NonZeroU32;
 use std::rc::Rc;
 use log::{debug, error, info, trace, warn};
 use winit::application::ApplicationHandler;
-use winit::dpi::LogicalSize;
+use winit::dpi::PhysicalSize;
 use winit::event::{DeviceEvent, DeviceId, StartCause, WindowEvent};
 use winit::event_loop::{ActiveEventLoop, ControlFlow, EventLoop};
 use winit::window::{Window, WindowAttributes, WindowId};
 use winit_input_helper::WinitInputHelper;
+
+const WIDTH: u32 = 800;
+const HEIGHT: u32 = 600;
 
 struct State {
     glSurface: Surface<WindowSurface>,
@@ -27,7 +29,7 @@ struct State {
 
 #[derive(Default)]
 struct App {
-    window: Option<Window>,
+	window: Option<Rc<Window>>,
     state: Option<State>,
 	input: WinitInputHelper,
 }
@@ -44,7 +46,7 @@ impl ApplicationHandler for App {
 		eventLoop.set_control_flow(ControlFlow::Poll);
 
 		let attributes = WindowAttributes::default()
-			.with_inner_size(LogicalSize::new(800, 600))
+			.with_inner_size(PhysicalSize::new(WIDTH, HEIGHT))
 			.with_title("CatBox Native");
 
 		let template = ConfigTemplateBuilder::new();
@@ -79,7 +81,7 @@ impl ApplicationHandler for App {
 			let notCurrentGlContext = glDisplay
 				.create_context(&glConfig, &contextAttributes)
 				.unwrap();
-			let window = window.unwrap();
+			let window = Rc::new(window.unwrap());
 
 			let surfaceAttributes = window.build_surface_attributes(Default::default()).unwrap();
 			let glSurface = glDisplay
@@ -91,14 +93,14 @@ impl ApplicationHandler for App {
 			glSurface.set_swap_interval(&glContext, SwapInterval::Wait(NonZeroU32::new(1).unwrap())).unwrap();
 			// glSurface.set_swap_interval(&glContext, SwapInterval::DontWait).unwrap();
 			
-			gl.viewport(0, 0, 800, 600);
+			// gl.viewport(0, 0, 800, 600);
 
 			(window, gl, glSurface, glContext)
 		};
 
-		let testApp = TestApp::new(gl.clone(), (800, 600));
+		let testApp = TestApp::new(window.clone(), gl.clone());
 
-		self.window = Some(window);
+		self.window = Some(window.clone());
 		self.state = Some(State {
 			glSurface,
 			glContext,
@@ -164,10 +166,10 @@ impl ApplicationHandler for App {
 		self.input.process_device_event(&event);
 	}
 
-	fn about_to_wait(&mut self, _eventLoop: &ActiveEventLoop) {
+	fn about_to_wait(&mut self, eventLoop: &ActiveEventLoop) {
 		self.input.end_step();
         if let Some(ref mut state) = self.state {
-            state.testApp.update(self.input.delta_time().unwrap().as_secs_f64(), &self.input);
+            state.testApp.update(self.input.delta_time().unwrap().as_secs_f64(), &self.input, eventLoop);
         }
     }
 

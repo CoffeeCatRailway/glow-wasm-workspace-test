@@ -6,11 +6,11 @@
 
 use core::TestApp;
 use std::rc::Rc;
-use glow::HasContext;
 use log::{debug, error, info, trace, warn};
 use wasm_bindgen::prelude::*;
 use web_sys::WebGl2RenderingContext;
 use winit::application::ApplicationHandler;
+use winit::dpi::PhysicalSize;
 use winit::event::{DeviceEvent, DeviceId, StartCause, WindowEvent};
 use winit::event_loop::{ActiveEventLoop, ControlFlow, EventLoop};
 use winit::window::{Window, WindowAttributes, WindowId};
@@ -18,13 +18,16 @@ use winit_input_helper::WinitInputHelper;
 
 use winit::platform::web::WindowAttributesExtWebSys;
 
+const WIDTH: u32 = 800;
+const HEIGHT: u32 = 600;
+
 struct State {
 	testApp: TestApp,
 }
 
 #[derive(Default)]
 struct App {
-	window: Option<Window>,
+	window: Option<Rc<Window>>,
 	state: Option<State>,
 	input: WinitInputHelper,
 }
@@ -48,25 +51,27 @@ impl ApplicationHandler for App {
 		let document = webWindow.document().unwrap();
 		let canvas = document.get_element_by_id("canvas").unwrap();
 		let canvas: web_sys::HtmlCanvasElement = canvas.dyn_into::<web_sys::HtmlCanvasElement>().unwrap();
-		canvas.set_width(800);
-		canvas.set_height(600);
+		canvas.set_width(WIDTH);
+		canvas.set_height(HEIGHT);
 
 		let webGlContext = canvas.get_context("webgl2").unwrap().unwrap().dyn_into::<WebGl2RenderingContext>().unwrap();
 		let gl = Rc::new(glow::Context::from_webgl2_context(webGlContext));
 		
-		unsafe {
-			gl.viewport(0, 0, 800, 600);
-		}
+		// unsafe {
+		// 	gl.viewport(0, 0, 800, 600);
+		// }
 
 		// #[cfg(target_arch = "wasm32")]
 		let attributes = WindowAttributes::default()
+			.with_inner_size(PhysicalSize::new(WIDTH, HEIGHT))
 			.with_title("CatBox Web")
 			.with_canvas(Some(canvas));
 		let window = eventLoop.create_window(attributes).unwrap();
+		let window = Rc::new(window);
 		
-		let testApp = TestApp::new(gl.clone(), (800, 600));
+		let testApp = TestApp::new(window.clone(), gl.clone());
 
-		self.window = Some(window);
+		self.window = Some(window.clone());
 		self.state = Some(State {
 			testApp,
 		})
@@ -126,10 +131,10 @@ impl ApplicationHandler for App {
 		self.input.process_device_event(&event);
 	}
 	
-	fn about_to_wait(&mut self, _eventLoop: &ActiveEventLoop) {
+	fn about_to_wait(&mut self, eventLoop: &ActiveEventLoop) {
 		self.input.end_step();
 		if let Some(ref mut state) = self.state {
-			state.testApp.update(self.input.delta_time().unwrap().as_secs_f64(), &self.input);
+			state.testApp.update(self.input.delta_time().unwrap().as_secs_f64(), &self.input, eventLoop);
 		}
 	}
 
