@@ -51,9 +51,9 @@ impl TestApp {
 
 	#[allow(unused)]
 	pub fn resize(&mut self, width: u32, height: u32) {
-		// self.windowSize.x = width as i16;
-		// self.windowSize.y = height as i16;
-		#[cfg(not(target_os = "linux"))] // Not needed on linux for some reason?
+		// Not needed on linux for some reason?
+		// Tested on: Arch Wayland
+		#[cfg(not(target_os = "linux"))]
 		unsafe {
 			// info!("{:?}", self.window.inner_size());
 			// info!("{} {}", width, height);
@@ -64,6 +64,7 @@ impl TestApp {
 
 	#[allow(unused)]
 	pub fn update(&mut self, dt: f64, input: &WinitInputHelper, eventLoop: &ActiveEventLoop) {
+		// Don't allow user to escape loop in web env
 		#[cfg(not(target_arch = "wasm32"))]
 		if input.key_pressed(KeyCode::Escape) {
 			eventLoop.exit();
