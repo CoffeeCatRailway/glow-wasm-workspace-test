@@ -18,10 +18,11 @@ pub struct TestApp {
 	lineRenderer: LineRenderer,
 
 	mouseCaptured: bool,
+	time: f32,
 }
 
 fn norm(v: Vec3) -> Vec3 {
-	v * 0.5 + 0.5
+	v.normalize() * 0.5 + 0.5
 }
 
 impl TestApp {
@@ -30,6 +31,7 @@ impl TestApp {
 			// gl.viewport(0, 0, 800, 600);
 			gl.viewport(0, 0, window.inner_size().width as i32, window.inner_size().height as i32);
 
+			gl.line_width(10.0);
 			gl.enable(DEPTH_TEST);
 			gl.polygon_mode(FRONT_AND_BACK, FILL);
 		}
@@ -49,6 +51,7 @@ impl TestApp {
 			
 			// windowSize: I16Vec2::new(width, height),
 			mouseCaptured: false,
+			time: 0.0,
 		}
 	}
 
@@ -67,6 +70,8 @@ impl TestApp {
 
 	#[allow(unused)]
 	pub fn update(&mut self, dt: f64, input: &WinitInputHelper, eventLoop: &ActiveEventLoop) {
+		self.time += dt as f32;
+
 		// Don't allow user to escape loop in web env
 		#[cfg(not(target_arch = "wasm32"))]
 		if input.key_pressed(KeyCode::Escape) {
@@ -118,15 +123,24 @@ impl TestApp {
 		// let green = vec3(0.0, 1.0, 0.0);
 		// let blue = vec3(0.0, 0.0, 1.0);
 		
-		let b1 = vec3(-1.0, -1.0, -1.0);
-		let b2 = vec3(1.0, -1.0, -1.0);
-		let b3 = vec3(1.0, -1.0, 1.0);
-		let b4 = vec3(-1.0, -1.0, 1.0);
-		let t1 = vec3(-1.0, 1.0, -1.0);
-		let t2 = vec3(1.0, 1.0, -1.0);
-		let t3 = vec3(1.0, 1.0, 1.0);
-		let t4 = vec3(-1.0, 1.0, 1.0);
-		
+		let mut b1 = vec3(-1.0, -1.0, -1.0);
+		let mut b2 = vec3(1.0, -1.0, -1.0);
+		let mut b3 = vec3(1.0, -1.0, 1.0);
+		let mut b4 = vec3(-1.0, -1.0, 1.0);
+		let mut t1 = vec3(-1.0, 1.0, -1.0);
+		let mut t2 = vec3(1.0, 1.0, -1.0);
+		let mut t3 = vec3(1.0, 1.0, 1.0);
+		let mut t4 = vec3(-1.0, 1.0, 1.0);
+
+		b1 = b1.rotate_y(self.time);
+		b2 = b2.rotate_y(self.time);
+		b3 = b3.rotate_y(self.time);
+		b4 = b4.rotate_y(self.time);
+		t1 = t1.rotate_y(self.time);
+		t2 = t2.rotate_y(self.time);
+		t3 = t3.rotate_y(self.time);
+		t4 = t4.rotate_y(self.time);
+
 		self.lineRenderer.pushLine(b1, norm(b1), b2, norm(b2));
 		self.lineRenderer.pushLine(b2, norm(b2), b3, norm(b3));
 		self.lineRenderer.pushLine(b3, norm(b3), b4, norm(b4));
