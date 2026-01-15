@@ -1,5 +1,4 @@
 [workspace]
-#name = "glow-wasm-workspace-test"
 members = ["core", "native", "wasm"]
 resolver = "3"
 

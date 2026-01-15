@@ -146,7 +146,6 @@ impl TestApp {
 			self.gl.clear_color(0.0, 0.0, 0.0, 1.0);
 		}
 
-		// let aspect = self.windowSize.x as f32 / self.windowSize.y as f32;
 		let aspect = self.window.inner_size().width as f32 / self.window.inner_size().height as f32;
 		let projection = Mat4::perspective_rh(self.camera.fov.to_radians(), aspect, 0.1, 100.0);
 		let view = self.camera.getViewMatrix();
