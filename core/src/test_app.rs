@@ -108,7 +108,7 @@ impl TestApp {
 		}
 		
 		if self.mouseCaptured {
-			info!("{:?}", input.cursor_diff());
+			// info!("{:?}", input.cursor_diff());
 			self.camera.processMouseScroll(input.scroll_diff().1);
 			self.camera.processMouseMovement(input.cursor_diff().0, -input.cursor_diff().1, true);
 		}
