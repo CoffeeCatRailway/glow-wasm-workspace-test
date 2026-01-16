@@ -10,7 +10,7 @@ use log::{debug, error, info, trace, warn};
 use wasm_bindgen::prelude::*;
 use web_sys::WebGl2RenderingContext;
 use winit::application::ApplicationHandler;
-use winit::dpi::PhysicalSize;
+// use winit::dpi::PhysicalSize;
 use winit::event::{DeviceEvent, DeviceId, StartCause, WindowEvent};
 use winit::event_loop::{ActiveEventLoop, ControlFlow, EventLoop};
 use winit::window::{Window, WindowAttributes, WindowId};
@@ -63,13 +63,13 @@ impl ApplicationHandler for App {
 
 		// #[cfg(target_arch = "wasm32")]
 		let attributes = WindowAttributes::default()
-			.with_inner_size(PhysicalSize::new(WIDTH, HEIGHT))
+			// .with_inner_size(PhysicalSize::new(WIDTH, HEIGHT))
 			.with_title("CatBox Web")
 			.with_canvas(Some(canvas));
 		let window = eventLoop.create_window(attributes).unwrap();
 		let window = Rc::new(window);
 		
-		let testApp = TestApp::new(window.clone(), gl.clone());
+		let testApp = TestApp::new(window.clone(), gl.clone(), (WIDTH, HEIGHT));
 
 		self.window = Some(window.clone());
 		self.state = Some(State {

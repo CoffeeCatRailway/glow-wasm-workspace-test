@@ -26,10 +26,11 @@ fn norm(v: Vec3) -> Vec3 {
 }
 
 impl TestApp {
-	pub fn new(window: Rc<Window>, gl: Rc<Context>) -> Self {
+	pub fn new(window: Rc<Window>, gl: Rc<Context>, (width, height): (u32, u32)) -> Self {
 		unsafe {
-			// gl.viewport(0, 0, 800, 600);
-			gl.viewport(0, 0, window.inner_size().width as i32, window.inner_size().height as i32);
+			gl.viewport(0, 0, width as i32, height as i32); // `window.inner_size()` return (0, 0) on wasm
+			// gl.viewport(0, 0, window.inner_size().width as i32, window.inner_size().height as i32);
+			// info!("{:?}", window.inner_size());
 
 			gl.line_width(10.0);
 			gl.enable(DEPTH_TEST);

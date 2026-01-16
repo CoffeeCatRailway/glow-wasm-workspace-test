@@ -98,7 +98,7 @@ impl ApplicationHandler for App {
 			(window, gl, glSurface, glContext)
 		};
 
-		let testApp = TestApp::new(window.clone(), gl.clone());
+		let testApp = TestApp::new(window.clone(), gl.clone(), (WIDTH, HEIGHT));
 
 		self.window = Some(window.clone());
 		self.state = Some(State {
