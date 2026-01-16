@@ -119,11 +119,6 @@ impl TestApp {
 			self.camera.processMouseMovement(input.cursor_diff().0, -input.cursor_diff().1, true);
 		}
 		
-		// let white = vec3(1.0, 1.0, 1.0);
-		// let red = vec3(1.0, 0.0, 0.0);
-		// let green = vec3(0.0, 1.0, 0.0);
-		// let blue = vec3(0.0, 0.0, 1.0);
-		
 		let mut b1 = vec3(-1.0, -1.0, -1.0);
 		let mut b2 = vec3(1.0, -1.0, -1.0);
 		let mut b3 = vec3(1.0, -1.0, 1.0);
@@ -132,7 +127,25 @@ impl TestApp {
 		let mut t2 = vec3(1.0, 1.0, -1.0);
 		let mut t3 = vec3(1.0, 1.0, 1.0);
 		let mut t4 = vec3(-1.0, 1.0, 1.0);
-
+		
+		let b1c = norm(b1);
+		let b2c = norm(b2);
+		let b3c = norm(b3);
+		let b4c = norm(b4);
+		let t1c = norm(t1);
+		let t2c = norm(t2);
+		let t3c = norm(t3);
+		let t4c = norm(t4);
+		
+		b1 = b1.rotate_x(self.time);
+		b2 = b2.rotate_x(self.time);
+		b3 = b3.rotate_x(self.time);
+		b4 = b4.rotate_x(self.time);
+		t1 = t1.rotate_x(self.time);
+		t2 = t2.rotate_x(self.time);
+		t3 = t3.rotate_x(self.time);
+		t4 = t4.rotate_x(self.time);
+		
 		b1 = b1.rotate_y(self.time);
 		b2 = b2.rotate_y(self.time);
 		b3 = b3.rotate_y(self.time);
@@ -141,21 +154,30 @@ impl TestApp {
 		t2 = t2.rotate_y(self.time);
 		t3 = t3.rotate_y(self.time);
 		t4 = t4.rotate_y(self.time);
+		
+		// b1 = b1.rotate_z(self.time);
+		// b2 = b2.rotate_z(self.time);
+		// b3 = b3.rotate_z(self.time);
+		// b4 = b4.rotate_z(self.time);
+		// t1 = t1.rotate_z(self.time);
+		// t2 = t2.rotate_z(self.time);
+		// t3 = t3.rotate_z(self.time);
+		// t4 = t4.rotate_z(self.time);
 
-		self.lineRenderer.pushLine(b1, norm(b1), b2, norm(b2));
-		self.lineRenderer.pushLine(b2, norm(b2), b3, norm(b3));
-		self.lineRenderer.pushLine(b3, norm(b3), b4, norm(b4));
-		self.lineRenderer.pushLine(b4, norm(b4), b1, norm(b1));
+		self.lineRenderer.pushLine(b1, b1c, b2, b2c);
+		self.lineRenderer.pushLine(b2, b2c, b3, b3c);
+		self.lineRenderer.pushLine(b3, b3c, b4, b4c);
+		self.lineRenderer.pushLine(b4, b4c, b1, b1c);
 		
-		self.lineRenderer.pushLine(t1, norm(t1), t2, norm(t2));
-		self.lineRenderer.pushLine(t2, norm(t2), t3, norm(t3));
-		self.lineRenderer.pushLine(t3, norm(t3), t4, norm(t4));
-		self.lineRenderer.pushLine(t4, norm(t4), t1, norm(t1));
+		self.lineRenderer.pushLine(t1, t1c, t2, t2c);
+		self.lineRenderer.pushLine(t2, t2c, t3, t3c);
+		self.lineRenderer.pushLine(t3, t3c, t4, t4c);
+		self.lineRenderer.pushLine(t4, t4c, t1, t1c);
 		
-		self.lineRenderer.pushLine(b1, norm(b1), t1, norm(t1));
-		self.lineRenderer.pushLine(b2, norm(b2), t2, norm(t2));
-		self.lineRenderer.pushLine(b3, norm(b3), t3, norm(t3));
-		self.lineRenderer.pushLine(b4, norm(b4), t4, norm(t4));
+		self.lineRenderer.pushLine(b1, b1c, t1, t1c);
+		self.lineRenderer.pushLine(b2, b2c, t2, t2c);
+		self.lineRenderer.pushLine(b3, b3c, t3, t3c);
+		self.lineRenderer.pushLine(b4, b4c, t4, t4c);
 	}
 	
 	pub fn render(&mut self) {
